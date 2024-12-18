@@ -25,22 +25,22 @@ public class JwtTokenProvider {
 
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
 
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(expireDate)
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
 
-        return token;
+
     }
 
-    private Key key(){
+    private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
     // extract username from JWT token
-    public String getUsername(String token){
+    public String getUsername(String token) {
 
         return Jwts.parser()
                 .verifyWith((SecretKey) key())
@@ -51,7 +51,7 @@ public class JwtTokenProvider {
     }
 
     // validate JWT token
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
         Jwts.parser()
                 .verifyWith((SecretKey) key())
                 .build()
