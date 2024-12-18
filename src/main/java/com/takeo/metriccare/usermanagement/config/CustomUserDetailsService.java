@@ -1,8 +1,7 @@
 package com.takeo.metriccare.usermanagement.config;
 
-import com.takeo.metriccare.usermanagement.model.User;
+import com.takeo.metriccare.usermanagement.model.entity.UserEntity;
 import com.takeo.metriccare.usermanagement.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +15,14 @@ import java.util.stream.Collectors;
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public CustomUserDetailsService(UserRepository userRepository) {this.userRepository = userRepository;}
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username).orElseThrow(() ->
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("User not exists by Username or Email"));
 
         Set<GrantedAuthority> authorities = user.getRoles().stream()

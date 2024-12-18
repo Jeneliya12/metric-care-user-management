@@ -1,23 +1,23 @@
 package com.takeo.metriccare.usermanagement.mapper;
 
-import com.takeo.metriccare.usermanagement.dto.RegisterDto;
-import com.takeo.metriccare.usermanagement.model.Role;
-import com.takeo.metriccare.usermanagement.model.User;
+import com.takeo.metriccare.usermanagement.model.dto.request.UserRequest;
+import com.takeo.metriccare.usermanagement.model.entity.RoleEntity;
+import com.takeo.metriccare.usermanagement.model.entity.UserEntity;
 
 import java.util.Set;
 
 public interface UserMapper {
 
-    static User toEntity(RegisterDto dto) {
-        User user = new User();
-        Role role = new Role();
+    static UserEntity toEntity(UserRequest dto) {
+
+        RoleEntity role = new RoleEntity();
         role.setName(dto.getRole());
 
-        user.setUsername(dto.getUsername());
+        UserEntity user = new UserEntity();
         user.setEmail(dto.getEmail());
+        user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
         user.setRoles(Set.of(role));
-
         return user;
     }
 }

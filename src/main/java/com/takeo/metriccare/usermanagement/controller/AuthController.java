@@ -1,12 +1,10 @@
 package com.takeo.metriccare.usermanagement.controller;
 
 
-import com.takeo.metriccare.usermanagement.dto.AuthResponseDto;
-import com.takeo.metriccare.usermanagement.dto.LoginDto;
-import com.takeo.metriccare.usermanagement.dto.RegisterDto;
+import com.takeo.metriccare.usermanagement.model.dto.AuthResponseDto;
+import com.takeo.metriccare.usermanagement.model.dto.LoginDto;
+import com.takeo.metriccare.usermanagement.model.dto.request.UserRequest;
 import com.takeo.metriccare.usermanagement.service.AuthService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,17 +12,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {this.authService = authService;}
 
     // Build Login REST API
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
+    @PostMapping("/token")
+    public ResponseEntity<AuthResponseDto> getToken(@RequestBody LoginDto loginDto) {
 
         //01 - Receive the token from AuthService
         String token = authService.login(loginDto);
@@ -35,11 +33,9 @@ public class AuthController {
         return new ResponseEntity<>(authResponseDto, HttpStatus.OK);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterDto registerDto) {
-
-        //01 - Receive the token from AuthService
-        authService.register(registerDto);
+    @PostMapping("/register/super-admin")
+    public ResponseEntity registerSuperAdmin(@RequestBody UserRequest request) {
+        authService.register(request);
         return ResponseEntity.ok("Register");
     }
 
